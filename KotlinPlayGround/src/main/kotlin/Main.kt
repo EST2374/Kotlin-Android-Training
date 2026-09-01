@@ -110,6 +110,7 @@ fun findePrimzahlen(liste: List<Int>): List<Int> {
 }
 
 private fun findPrim(int: Int): Boolean {
+    if (int < 2) return false
     for (i in 2..<int) {
         if (int % i == 0) {
             return false
@@ -128,21 +129,28 @@ fun zaehleNachAnfangsbuchstabe(namen: List<String>): Map<Char, Int> {
 // Aufgabe 9: pro Produkt die Gesamtsumme (menge * preis) berechnen
 // (Map<String, Double>) — mehrere Bestellungen desselben Produkts zusammenzählen
 fun summeProProdukt(bestellungen: List<Bestellung>): Map<String, Double> {
-    TODO()
+    val groupedByProduct = bestellungen.groupBy { it.produkt }
+    return groupedByProduct.mapValues { (_, product) ->
+        product.sumOf { it.preis * it.menge }
+    }
 }
 
 // Aufgabe 10: die erste Zahl finden, die > 20 UND durch 4 teilbar ist
 // (null falls keine existiert)
 fun ersteGrosseDurchVierteilbare(liste: List<Int>): Int? {
-    TODO()
+    val greater20 = liste.filter { it > 20 }
+    val teilbar4 = greater20.find { it % 4 == 0 }
+    return teilbar4
 }
 
 // Aufgabe 11: prüfen ob ALLE Zahlen gerade UND größer als 10 sind
 fun alleGeradeUeber10(liste: List<Int>): Boolean {
-    TODO()
+    return liste.all { it % 2 == 0 && it > 10 }
 }
 
 // Aufgabe 12: die Bestellung mit dem höchsten Gesamtwert (menge * preis) zurückgeben
 fun teuersteBestellung(bestellungen: List<Bestellung>): Bestellung? {
-    TODO()
+    val gesPreise = bestellungen.map { it.menge * it.preis }
+    val maxGesPreis = gesPreise.max()
+    return bestellungen.find { it.preis * it.menge == maxGesPreis }
 }
