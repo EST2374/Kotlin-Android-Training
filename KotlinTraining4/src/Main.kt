@@ -58,7 +58,8 @@ fun main() {
     fun wende2xAn(zahl: Int, wiederholungen: Int, operation: (Int) -> Int): Int {
         return operation(operation(zahl))
     }
-    println(wende2xAn(3,2) { it * 2 })
+    println(wende2xAn(3,4) { it + 2 })
 }
 
+// Eigene Exception
 class NegativAmountException(message: String): Exception(message)

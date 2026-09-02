@@ -1,7 +1,6 @@
 package org.example
 
-import java.util.Locale
-import java.util.Locale.getDefault
+
 
 fun main() {
 
@@ -110,8 +109,84 @@ fun main() {
     produkte10ProzentMehr.forEach { println(it) }
 
 
+    // ComponentN
+    val u1 = User("Anna", 30)
+    val u2 = u1.copy(age = 31)  // User(name=Anna, age=31)
+
+    val (username, age) = u1
+
+    // Sealed Class
+    fun describe(result: ApiResult): String = when (result) {
+        is Ok -> "Erfolg: ${result.value}"
+        is Fail -> "Fehler: ${result.error}"
+        Loading -> TODO()
+    }
+
+    println(describe(Ok(200)))
+
+    // Enum Class
+    Planet.entries.forEach { println(it.surfaceGravity()) }
+
+    // Inline Class
+    //fun createUser(userId: String, email: String) { ... }
+    //createUser(email, userId) vertauscht! Compiler meckert nicht, beides ist String
+    fun createUser(userId: UserId, email: Email): OnlineUser {
+        return OnlineUser(
+            userId,
+            email
+        )
+    }
+
+    //createUser(Email("a@b.com"), UserId("123"))  // Compiler-Fehler! Typen passen nicht
+    val newOnlineUser = createUser(UserId("123"), Email("a@b.com"))
+    println(newOnlineUser)
 
 
+    fun printDistance(distance: Meters) {
+        println("Meter: ${distance.value}")
+        println("Feet: ${distance.toFeet()}")
+    }
+
+    printDistance(Meters(10.0))
+
+
+    // Class Generics
+    class Box<T>(val content: T) {
+        fun show(): String = "Box enthält: $content"
+    }
+
+    val intBox = Box(42)             // Box<Int>, Typ wird inferiert
+    val strBox = Box("Hallo")     // Box<String>
+
+
+    class Stack<T> {
+        private val items = mutableListOf<T>()
+        fun push(item: T) { items.add(item) }
+        fun pop(): T? = if (items.isEmpty()) null else items.removeAt(items.size - 1)
+    }
+
+    class Pair2<A, B>(val first: A,val second: B) {
+
+        fun swap(): Pair2<B, A> {
+            return Pair2(second,first)
+        }
+
+    }
+
+    val myPair = Pair2("Alter", 25)
+    println(myPair.first)
+    println(myPair.second)
+    println()
+    myPair.swap().let { println("${it.first}\n${it.second}") }
+
+
+    // TypeAlias
+    fun printMap(map: StringMap) {
+        map.forEach { println(it) }
+    }
+
+    val stringMap: StringMap = mapOf("one" to "1", "two" to "2")
+    printMap(stringMap)
 }
 
 private fun getEmail(): String {
@@ -134,3 +209,63 @@ data class Person2(val name: String, val age: Int, val stadt: String)
 data class Rechteck(val breite: Int, val hoehe: Int)
 
 data class Produkt(val name: String, val preis: Double)
+
+data class User(val name: String, val age: Int)
+
+// Sealed Class
+sealed class ApiResult
+
+data class Ok(val value: Int): ApiResult()
+data class Fail(val error: String): ApiResult()
+object Loading: ApiResult()
+
+// Enum Class
+enum class Direction(val degrees: Int) {
+    NORTH(0),
+    EAST(90),
+    SOUTH(180),
+    WEST(270);
+
+    fun opposite(): Direction = when (this) {
+        NORTH -> SOUTH
+        SOUTH -> NORTH
+        EAST -> WEST
+        WEST -> EAST
+    }
+}
+
+enum class Planet(val massKg: Double, val radiusM: Double) {
+    MERCURY(1.0,2.0),
+    EARTH(3.0,4.0),
+    MARS(5.0,6.0);
+
+    companion object {
+        val G = 6.67 * Math.pow(10.0,-11.0)
+    }
+
+    fun surfaceGravity(): Double {
+        return G * this.massKg / (Math.pow(this.radiusM,2.0))
+    }
+}
+
+// Inline Class
+@JvmInline
+value class UserId(val value: String)
+
+@JvmInline
+value class Email(val value: String)
+
+data class OnlineUser(val name: UserId, val age: Email)
+
+@JvmInline
+value class Meters(val value: Double) {
+    fun toFeet(): Double {
+        return value * 3.28084
+    }
+}
+
+
+
+// TypeAlias
+typealias StringMap = Map<String, String>
+
