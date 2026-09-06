@@ -5,6 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -101,6 +102,24 @@ fun main() = runBlocking {
         delay(1500)
         sensorJob.cancel()
         println("Sensor gestoppt")
+
+        // Combine
+        val nameFlow = flow {
+            emit("Alice")
+            delay(200)
+            emit("Bob")
+        }
+
+        val ageFlow = flow {
+            delay(100)
+            emit(25)
+            delay(300)
+            emit(30)
+        }
+
+        nameFlow.combine(ageFlow) { name, age ->
+            "$name is $age years old"
+        }.collect { println(it) }
 
     }
     println("Dauer: $zeit ms")
