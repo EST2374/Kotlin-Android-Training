@@ -11,7 +11,7 @@ sealed interface PersonalBueroNavKey: NavKey {
     data object PersonalBueroList: PersonalBueroNavKey
 
     @Serializable
-    data class PersonalDetail(val id: String): PersonalBueroNavKey
+    data object PersonalDetail: PersonalBueroNavKey
 
 
 }

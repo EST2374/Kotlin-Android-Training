@@ -20,12 +20,16 @@ fun PersonalBueroRootNavigation(
         entryProvider = entryProvider {
             entry<PersonalBueroNavKey.PersonalBueroList> {
                 PersonalBueroListScreen(
-
+                    onNavigationToList = { backStack.add(PersonalBueroNavKey.PersonalBueroList) },
+                    onNavigationToDetails = { backStack.add(PersonalBueroNavKey.PersonalDetail) },
+                    viewModel = viewModel
                 )
             }
-            entry<PersonalBueroNavKey.PersonalDetail> { id ->
+            entry<PersonalBueroNavKey.PersonalDetail> {
                 PersonalBueroDetailsScreen(
-
+                    onNavigationToList = { backStack.add(PersonalBueroNavKey.PersonalBueroList) },
+                    onNavigationToDetails = { backStack.add(PersonalBueroNavKey.PersonalDetail) },
+                    viewModel = viewModel
                 )
             }
         }

@@ -12,7 +12,7 @@ import retrofit2.http.Path
 interface RetroFitService {
 
     @GET("employee")
-    fun getEmployees(): List<Employee>
+    suspend fun getEmployees(): List<Employee>
 
     @POST("employee")
     suspend fun addEmployee(@Body employee: Employee)
